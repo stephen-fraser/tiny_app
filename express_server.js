@@ -22,6 +22,18 @@ app.get("/hello", (req, res) => {
 });
 
 
+// set path created to display scope
+app.get("/set", (req, res) => {
+  const a = 1;
+  res.send(`a = ${a}`);
+ });
+ 
+ // fetch path created to show erro that you can't access value of a because of reference/scope error
+ app.get("/fetch", (req, res) => {
+  res.send(`a = ${a}`);
+ });
+
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
