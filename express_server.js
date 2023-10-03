@@ -11,14 +11,24 @@ const urlDatabase = {
 };
 
 // Randon string generator to simulate tinyUrl
-function generateRandomString() {}
+function generateRandomString() {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    for (let x = 0; x < 6; x++) {
+      result += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return result;
+}
 
 // POST requests are sent as a Buffer (great for transmitting data but is not readable without this - this is middleware)
 app.use(express.urlencoded({ extended: true }));
 
+
 app.post("/urls", (req, res) => {
-  console.log(req.body); // Log the POST request body to the console
-  res.send('ok'); // Respond with 'Ok' (we will replace this)
+  let uniqueURL = generateRandomString(); // call generate random string for unique url
+  const longURL = req.body.longURL
+  urlDatabase[uniqueURL] = longURL; // update urlDatabase with new unique url and long url 
+  res.redirect(`/urls/${uniqueURL}`); // redirect after submittal to uniqueURL
 });
 
 // new route handler for /urls
@@ -39,6 +49,12 @@ app.get('/urls/:id', (req, res) => {
   const templateVars = {id: req.params.id, longURL: urlDatabase[req.params.id]}
   res.render("urls_show.ejs", templateVars)
 });
+
+//new route that redirects to actual longURL
+app.get('/u/:id', (req, res) => {
+  const longURL = urlDatabase[req.params.id]
+  res.redirect(longURL);
+})
 
 
 app.get("/", (req, res) => {
