@@ -2,12 +2,20 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 
+// configuration of express app
 app.set('view engine', 'ejs');
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
+
+// new route handler for /urls
+app.get("/urls", (req, res) => {
+  const templateVars = { urls: urlDatabase };
+  //passes the URL data to our template
+  res.render("urls_index", templateVars);
+});
 
 app.get("/", (req, res) => {
   res.send("Hello!");
