@@ -10,8 +10,16 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+// Randon string generator to simulate tinyUrl
+function generateRandomString() {}
+
 // POST requests are sent as a Buffer (great for transmitting data but is not readable without this - this is middleware)
 app.use(express.urlencoded({ extended: true }));
+
+app.post("/urls", (req, res) => {
+  console.log(req.body); // Log the POST request body to the console
+  res.send('ok'); // Respond with 'Ok' (we will replace this)
+});
 
 // new route handler for /urls
 app.get("/urls", (req, res) => {
@@ -54,11 +62,10 @@ app.get("/set", (req, res) => {
   res.send(`a = ${a}`);
  });
  
- // fetch path created to show erro that you can't access value of a because of reference/scope error
+ // fetch path created to show error that you can't access value of a because of reference/scope error
  app.get("/fetch", (req, res) => {
   res.send(`a = ${a}`);
  });
-
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
