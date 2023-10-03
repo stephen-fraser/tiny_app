@@ -17,6 +17,12 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+//new route 
+app.get('/urls/:id', (req, res) => {
+  const templateVars = {id: req.params.id, longURL:'http://www.lighthouselabs.ca/'}
+  res.render("urls_show.ejs", templateVars)
+});
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
