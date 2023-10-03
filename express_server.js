@@ -10,6 +10,9 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+// POST requests are sent as a Buffer (great for transmitting data but is not readable without this - this is middleware)
+app.use(express.urlencoded({ extended: true }));
+
 // new route handler for /urls
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase };
@@ -17,11 +20,18 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-//new route 
+//new route for /urls/new  - the form
+app.get('/urls/new', (req, res) => {
+  res.render("urls_new.ejs")
+});
+
+
+//new route for URL tinyIDs
 app.get('/urls/:id', (req, res) => {
-  const templateVars = {id: req.params.id, longURL:'http://www.lighthouselabs.ca/'}
+  const templateVars = {id: req.params.id, longURL: urlDatabase[req.params.id]}
   res.render("urls_show.ejs", templateVars)
 });
+
 
 app.get("/", (req, res) => {
   res.send("Hello!");
