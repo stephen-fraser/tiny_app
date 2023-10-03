@@ -80,7 +80,10 @@ app.post('/login', (req, res) => {
 
 // new route handler for /urls
 app.get('/urls', (req, res) => {
-  const templateVars = { urls: urlDatabase };
+  const templateVars = {
+    username: req.cookies['username'],
+    urls: urlDatabase 
+  };
   //passes the URL data to our template
   res.render("urls_index", templateVars);
 });
