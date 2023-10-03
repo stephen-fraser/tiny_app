@@ -24,15 +24,20 @@ function generateRandomString() {
 app.use(express.urlencoded({ extended: true }));
 
 
-app.post("/urls", (req, res) => {
+app.post('/urls', (req, res) => {
   let uniqueURL = generateRandomString(); // call generate random string for unique url
   const longURL = req.body.longURL
   urlDatabase[uniqueURL] = longURL; // update urlDatabase with new unique url and long url 
   res.redirect(`/urls/${uniqueURL}`); // redirect after submittal to uniqueURL
 });
 
+app.post('/urls/:id', (req, res) => {
+  const templateVars = {id: req.params.id, longURL: urlDatabase[req.params.id]}
+  res.render('urls_show.ejs', templateVars)
+})
+
 // new route handler for /urls
-app.get("/urls", (req, res) => {
+app.get('/urls', (req, res) => {
   const templateVars = { urls: urlDatabase };
   //passes the URL data to our template
   res.render("urls_index", templateVars);
@@ -47,7 +52,7 @@ app.get('/urls/new', (req, res) => {
 //new route for URL tinyIDs
 app.get('/urls/:id', (req, res) => {
   const templateVars = {id: req.params.id, longURL: urlDatabase[req.params.id]}
-  res.render("urls_show.ejs", templateVars)
+  res.render('urls_show.ejs', templateVars)
 });
 
 //new route that redirects to actual longURL
@@ -57,8 +62,8 @@ app.get('/u/:id', (req, res) => {
 })
 
 
-app.get("/", (req, res) => {
-  res.send("Hello!");
+app.get('/', (req, res) => {
+  res.send('Hello!');
 });
 
 // adds JSON string that reprents the entire urlDatabase objects at time of request
