@@ -44,10 +44,20 @@ app.post('/urls', (req, res) => {
 });
 
 // logs the POST request body to the console and responds 
-app.post('/urls/:id', (req, res) => {
+app.get('/urls/:id', (req, res) => {
   const templateVars = {id: req.params.id, longURL: urlDatabase[req.params.id]}
   res.render('urls_show.ejs', templateVars)
 });
+
+//
+// Edit longURL
+//
+app.post('/urls/:id', (req, res) => {
+  const id = req.params.id;
+  const updatedLongURL = req.body.updatedLongURL;
+  urlDatabase[id] = updatedLongURL;
+  res.redirect('/urls');
+})
 
 //
 // Delete url entries from the database
