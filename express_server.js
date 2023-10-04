@@ -78,11 +78,10 @@ app.post('/urls/:id/delete', (req, res) => {
 // POST /login
 app.post('/login', (req, res) => {
 
-  // const user = users[req.cookies['user.id']]
   const user = getUserByEmail(users, req.body.email)
 
   if (!user || user.password !== req.body.password) {
-    return res.status(400).send('A user with that email is already registered.')
+    return res.status(403).send('That email or password do not match our records.')
   }
 
   res.cookie('user.id', user.id) //Save Cookies
@@ -138,8 +137,8 @@ app.get('/registration',(req, res) => {
 
 // POST /logout
 app.post('/logout', (req, res) => {
-  res.clearCookie('username')
-  res.redirect('/urls')
+  res.clearCookie('user.id')
+  res.redirect('/login')
 });
 
 // GET /urls
