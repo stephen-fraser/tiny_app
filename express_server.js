@@ -5,15 +5,15 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const cookieParser = require('cookie-parser'); // configuration of cookie-parser middleware
+const morgan = require('morgan') // configure morgan
 
 // configuration of express app - middleware
 app.set('view engine', 'ejs');
 
-//start up cookieParser
-app.use(cookieParser());
-
-// POST requests are sent as a Buffer (great for transmitting data but is not readable without this - this is middleware)
-app.use(express.urlencoded({ extended: true })); //creates req.body
+// middleware
+app.use(express.urlencoded({ extended: true })); //creates req.body // POST requests are sent as a Buffer (great for transmitting data but is not readable without this - this is middleware)
+app.use(cookieParser()); //start up cookieParser
+app.use(morgan('dev')); // start up morgan
 
 // URL Database
 const urlDatabase = {
@@ -31,7 +31,6 @@ app.post('/urls', (req, res) => {
   urlDatabase[uniqueURL] = longURL; // update urlDatabase with new unique url and long url 
   res.redirect(`/urls/${uniqueURL}`); // redirect after submittal to uniqueURL
 });
-
 
 // POST //urls/:id
 app.post('/urls/:id', (req, res) => {
@@ -54,6 +53,16 @@ app.post('/login', (req, res) => {
   res.cookie('username', username) //Save Cookies
   res.redirect('/urls')
 })
+
+// // POST /register
+// app.post('/registration',(req, res) => {
+// });
+
+// // GET /register
+// app.get('/registration',(req, res) => {
+
+//   res.render('registration');
+// });
 
 // POST /logout
 app.post('/logout', (req, res) => {
