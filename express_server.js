@@ -101,7 +101,7 @@ app.post('/registration',(req, res) => {
 
   // use function to look for a user based on the email provided in the users objec
   if (getUserByEmail(users, email)) {
-    return res.status(400).send('A user with that email is already registered.');
+    return res.status(400).send('A user with that email is already in our database.');
   }
 
   let id = generateRandomString(4) // use random string generatoed to create a unique ID
