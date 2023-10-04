@@ -41,12 +41,12 @@ const generateRandomString = (length) => Math.random().toString(36).substring(2,
 // function for getting user by email
 const getUserByEmail = (users, email) => {
 
-  let foundUser = false;
+  let foundUser = null;
 
   for (const userId in users) {
     const user = users[userId];
     if (user.email === email) {
-      foundUser = true;
+      foundUser = user;
     }
   }
   return foundUser;
@@ -77,8 +77,15 @@ app.post('/urls/:id/delete', (req, res) => {
 
 // POST /login
 app.post('/login', (req, res) => {
-  const username = req.body.username
-  res.cookie('username', username) //Save Cookies
+
+  // const user = users[req.cookies['user.id']]
+  const user = getUserByEmail(users, req.body.email)
+
+  if (!user || user.password === req.body.password) {
+    return res.status(400).send('A user with that email is already registered.')
+  }
+
+  res.cookie('user.id', user.id) //Save Cookies
   res.redirect('/urls')
 })
 
@@ -93,10 +100,8 @@ app.post('/registration',(req, res) => {
     return res.status(400).send("Please provide an email and password to register.")
   }
 
-  // use function to look for a user based on the email provided in the users object
-  let foundUser = getUserByEmail(users, email);
-
-  if (foundUser) {
+  // use function to look for a user based on the email provided in the users objec
+  if (getUserByEmail(users, email)) {
     return res.status(400).send('A user with that email is already registered.');
   }
 
