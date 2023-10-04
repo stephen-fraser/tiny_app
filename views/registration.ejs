@@ -23,15 +23,16 @@
     <%- include('partials/_header') %>
     <main style="margin: 1em;">
       <h2>New User? Register now!</h2>
-
-      <form method="POST" action="/register">
-        <label>Email:</label>
-        <input name="email" />
-        <br/>
-        <label>Password:</label>
-        <input name="password" />
-        <br/>
-        <button type="submit">Register!</button>
+        
+      <form method="POST" action="/register" >
+        <div class="form-group mb-2"></div>
+          <label>Email:</label>
+          <input name="email" type="email"/>
+          <br/>
+          <label>Password:</label>
+          <input name="password" type="password"/>
+          <br/>
+          <button type="submit">Register!</button>
       </form>
 
           <!-- Bootstrap JS -->
