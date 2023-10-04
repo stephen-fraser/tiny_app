@@ -70,6 +70,14 @@ app.post('/login', (req, res) => {
 
 // POST /register
 app.post('/registration',(req, res) => {
+
+  const email = req.body.email;
+  const password = req.body.password;
+
+  if (!email || !password) {
+    return res.status(400).send("Please provide an email and password to register.")
+  }
+
 });
 
 // GET /register
