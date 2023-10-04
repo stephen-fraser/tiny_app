@@ -21,6 +21,20 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = {
+  abcd: {
+    id: "abcd",
+    email: "a@a.com",
+    password: "1234"
+  },
+  efgh: {
+    id: "efgh",
+    email: "b@b.com",
+    password: "5678"
+  },
+};
+
+
 // Randon string generator to simulate tinyUrl
 const generateRandomString = (length) => Math.random().toString(36).substring(2, (length + 2))
 
