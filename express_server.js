@@ -11,6 +11,11 @@ const PORT = 8080; // default port 8080
 app.set('view engine', 'ejs');
 
 //
+// configuration of cookie-parser middleware
+//
+const cookieParser = require('cookie-parser');
+
+//
 //Database
 //
 const urlDatabase = {
@@ -35,6 +40,7 @@ function generateRandomString() {
 //
 app.use(express.urlencoded({ extended: true }));
 
+app.use(cookieParser());
 
 app.post('/urls', (req, res) => {
   let uniqueURL = generateRandomString(); // call generate random string for unique url
@@ -45,7 +51,10 @@ app.post('/urls', (req, res) => {
 
 // logs the POST request body to the console and responds 
 app.get('/urls/:id', (req, res) => {
-  const templateVars = {id: req.params.id, longURL: urlDatabase[req.params.id]}
+  const templateVars = {
+    id: req.params.id, longURL: urlDatabase[req.params.id],
+    username: req.cookies['username'],
+  }
   res.render('urls_show.ejs', templateVars)
 });
 
@@ -77,6 +86,11 @@ app.post('/login', (req, res) => {
   res.redirect('/urls')
 })
 
+app.post('/logout', (req, res) => {
+  const username = req.body.username
+  res.cookie('username', username)
+  res.redirect('/urls')
+});
 
 // new route handler for /urls
 app.get('/urls', (req, res) => {
@@ -91,7 +105,10 @@ app.get('/urls', (req, res) => {
 
 //new route for /urls/new  - the form
 app.get('/urls/new', (req, res) => {
-  res.render("urls_new.ejs")
+  templateVars = { 
+    username: req.cookies['username']
+  }
+  res.render("urls_new.ejs", templateVars)
 });
 
 //new route for URL tinyIDs
@@ -99,6 +116,7 @@ app.get('/urls/:id', (req, res) => {
   const templateVars = {id: req.params.id, longURL: urlDatabase[req.params.id]}
   res.render('urls_show.ejs', templateVars)
 });
+
 
 
 
