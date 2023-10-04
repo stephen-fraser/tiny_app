@@ -81,7 +81,7 @@ app.post('/login', (req, res) => {
   // const user = users[req.cookies['user.id']]
   const user = getUserByEmail(users, req.body.email)
 
-  if (!user || user.password === req.body.password) {
+  if (!user || user.password !== req.body.password) {
     return res.status(400).send('A user with that email is already registered.')
   }
 
