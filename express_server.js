@@ -116,6 +116,13 @@ app.post('/registration',(req, res) => {
   res.redirect('/urls')
 });
 
+app.get('/login' ,(req, res) => {
+  const templateVars = {
+    user: users[req.cookies['user.id']]
+  };
+  res.render('login', templateVars);
+});
+
 // GET /register
 app.get('/registration',(req, res) => {
   const templateVars = {
