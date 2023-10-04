@@ -4,16 +4,10 @@
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
+const cookieParser = require('cookie-parser'); // configuration of cookie-parser middleware
 
-//
 // configuration of express app - middleware
-//
 app.set('view engine', 'ejs');
-
-//
-// configuration of cookie-parser middleware
-//
-const cookieParser = require('cookie-parser');
 
 //start up cookieParser
 app.use(cookieParser());
@@ -21,9 +15,7 @@ app.use(cookieParser());
 // POST requests are sent as a Buffer (great for transmitting data but is not readable without this - this is middleware)
 app.use(express.urlencoded({ extended: true })); //creates req.body
 
-//
-//Database
-//
+// URL Database
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
