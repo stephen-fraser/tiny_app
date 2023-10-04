@@ -54,15 +54,17 @@ app.post('/login', (req, res) => {
   res.redirect('/urls')
 })
 
-// // POST /register
-// app.post('/registration',(req, res) => {
-// });
+// POST /register
+app.post('/registration',(req, res) => {
+});
 
-// // GET /register
-// app.get('/registration',(req, res) => {
-
-//   res.render('registration');
-// });
+// GET /register
+app.get('/registration',(req, res) => {
+  const templateVars = {
+    username: null
+  };
+  res.render('registration', templateVars);
+});
 
 // POST /logout
 app.post('/logout', (req, res) => {
