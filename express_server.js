@@ -49,14 +49,6 @@ app.post('/urls', (req, res) => {
   res.redirect(`/urls/${uniqueURL}`); // redirect after submittal to uniqueURL
 });
 
-// logs the POST request body to the console and responds 
-app.get('/urls/:id', (req, res) => {
-  const templateVars = {
-    id: req.params.id, longURL: urlDatabase[req.params.id],
-    username: req.cookies['username'],
-  }
-  res.render('urls_show.ejs', templateVars)
-});
 
 //
 // Edit longURL
@@ -105,10 +97,20 @@ app.get('/urls', (req, res) => {
 
 //new route for /urls/new  - the form
 app.get('/urls/new', (req, res) => {
+  console.log('hello')
   templateVars = { 
     username: req.cookies['username']
   }
   res.render("urls_new.ejs", templateVars)
+});
+
+// logs the POST request body to the console and responds 
+app.get('/urls/:id', (req, res) => {
+  const templateVars = {
+    id: req.params.id, longURL: urlDatabase[req.params.id],
+    username: req.cookies['username'],
+  }
+  res.render('urls_show.ejs', templateVars)
 });
 
 //new route for URL tinyIDs
@@ -116,8 +118,6 @@ app.get('/urls/:id', (req, res) => {
   const templateVars = {id: req.params.id, longURL: urlDatabase[req.params.id]}
   res.render('urls_show.ejs', templateVars)
 });
-
-
 
 
 app.get('/', (req, res) => {
