@@ -38,6 +38,20 @@ const users = {
 // Randon string generator to simulate tinyUrl
 const generateRandomString = (length) => Math.random().toString(36).substring(2, (length + 2))
 
+// function for getting user by email
+const getUserByEmail = (users, email) => {
+
+  let foundUser = false;
+
+  for (const userId in users) {
+    const user = users[userId];
+    if (user.email === email) {
+      foundUser = true;
+    }
+  }
+  return foundUser;
+};
+
 // POST /urls
 app.post('/urls', (req, res) => {
   let uniqueURL = generateRandomString(6); // call generate random string for unique url
@@ -79,15 +93,8 @@ app.post('/registration',(req, res) => {
     return res.status(400).send("Please provide an email and password to register.")
   }
 
-  // look for a user based on the email provided in the users object
-  let foundUser = null;
-
-  for (const userId in users) {
-    const user = users[userId];
-    if (user.email === email) {
-      foundUser = user;
-    }
-  }
+  // use function to look for a user based on the email provided in the users object
+  let foundUser = getUserByEmail(users, email);
 
   if (foundUser) {
     return res.status(400).send('A user with that email is already registered.');
