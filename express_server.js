@@ -15,6 +15,12 @@ app.set('view engine', 'ejs');
 //
 const cookieParser = require('cookie-parser');
 
+//start up cookieParser
+app.use(cookieParser());
+
+// POST requests are sent as a Buffer (great for transmitting data but is not readable without this - this is middleware)
+app.use(express.urlencoded({ extended: true })); //creates req.body
+
 //
 //Database
 //
@@ -23,67 +29,47 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-//
 // Randon string generator to simulate tinyUrl
-//
-function generateRandomString() {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (let x = 0; x < 6; x++) {
-      result += characters.charAt(Math.floor(Math.random() * characters.length));
-    }
-    return result;
-};
+const generateRandomString = (length) => Math.random().toString(36).substring(2, (length + 2))
 
-//
-// POST requests are sent as a Buffer (great for transmitting data but is not readable without this - this is middleware)
-//
-app.use(express.urlencoded({ extended: true }));
-
-app.use(cookieParser());
-
+// POST /urls
 app.post('/urls', (req, res) => {
-  let uniqueURL = generateRandomString(); // call generate random string for unique url
+  let uniqueURL = generateRandomString(6); // call generate random string for unique url
   const longURL = req.body.longURL
   urlDatabase[uniqueURL] = longURL; // update urlDatabase with new unique url and long url 
   res.redirect(`/urls/${uniqueURL}`); // redirect after submittal to uniqueURL
 });
 
 
-//
-// Edit longURL
-//
+// POST //urls/:id
 app.post('/urls/:id', (req, res) => {
   const id = req.params.id;
-  const updatedLongURL = req.body.updatedLongURL;
+  const updatedLongURL = req.body.updatedLongURL; // Edit longURL
   urlDatabase[id] = updatedLongURL;
   res.redirect('/urls');
 })
 
-//
-// Delete url entries from the database
-//
+// POST /urls/:id/delete
 app.post('/urls/:id/delete', (req, res) => {
   const idToDelete = req.params.id;
-  delete urlDatabase[idToDelete]; 
+  delete urlDatabase[idToDelete]; // Delete url entries from the database
   res.redirect('/urls');
 });
 
-//
-//Save Cookies
-//
+// POST /login
 app.post('/login', (req, res) => {
   const username = req.body.username
-  res.cookie('username', username)
+  res.cookie('username', username) //Save Cookies
   res.redirect('/urls')
 })
 
+// POST /logout
 app.post('/logout', (req, res) => {
   res.clearCookie('username')
   res.redirect('/urls')
 });
 
-// new route handler for /urls
+// GET /urls
 app.get('/urls', (req, res) => {
   const templateVars = {
     username: req.cookies['username'],
@@ -93,7 +79,7 @@ app.get('/urls', (req, res) => {
   res.render("urls_index", templateVars);
 });
 
-//new route for /urls/new  - the form
+// GET /urls/new
 app.get('/urls/new', (req, res) => {
   templateVars = { 
     username: req.cookies['username']
@@ -101,13 +87,13 @@ app.get('/urls/new', (req, res) => {
   res.render("urls_new.ejs", templateVars)
 });
 
-// redirect any request to ("u/:id") to its longURL
+// GET /u/:id
 app.get("/u/:id", (req, res) => {
   const longURL = urlDatabase[req.params.id];
   res.redirect(longURL);
 });
 
-// logs the POST request body to the console and responds 
+// GET /urls/:id
 app.get('/urls/:id', (req, res) => {
   const templateVars = {
     id: req.params.id, longURL: urlDatabase[req.params.id],
@@ -116,25 +102,23 @@ app.get('/urls/:id', (req, res) => {
   res.render('urls_show.ejs', templateVars)
 });
 
-//new route for URL tinyIDs
+// GET /urls/:id
 app.get('/urls/:id', (req, res) => {
   const templateVars = {id: req.params.id, longURL: urlDatabase[req.params.id]}
   res.render('urls_show.ejs', templateVars)
 });
 
+// GET /
 app.get('/', (req, res) => {
   res.send('Hello!');
 });
 
-// adds JSON string that reprents the entire urlDatabase objects at time of request
+// GET /urls.json
 app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
+  res.json(urlDatabase); //adds JSON string that reprents the entire urlDatabase objects at time of request
 });
 
-
- //
  // Listen
- //
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
