@@ -22,13 +22,13 @@ const urlDatabase = {
 };
 
 const users = {
-  abcd: {
-    id: "abcd",
+  1234: {
+    id: "1234",
     email: "a@a.com",
     password: "1234"
   },
-  efgh: {
-    id: "efgh",
+  5678: {
+    id: "5678",
     email: "b@b.com",
     password: "5678"
   },
@@ -104,6 +104,8 @@ app.post('/registration',(req, res) => {
   users[id] = user; //assigning the new user objects name as it's unique 4 character ID
   console.log(users)
 
+
+  res.cookie('user.id', user.id) //
   res.redirect('/urls')
 });
 
@@ -124,7 +126,7 @@ app.post('/logout', (req, res) => {
 // GET /urls
 app.get('/urls', (req, res) => {
   const templateVars = {
-    username: req.cookies['username'],
+    user: users[req.cookies['user.id']],
     urls: urlDatabase 
   };
   //passes the URL data to our template
@@ -134,7 +136,7 @@ app.get('/urls', (req, res) => {
 // GET /urls/new
 app.get('/urls/new', (req, res) => {
   templateVars = { 
-    username: req.cookies['username']
+    user: users[req.cookies['user.id']],
   }
   res.render("urls_new.ejs", templateVars)
 });
@@ -149,14 +151,17 @@ app.get("/u/:id", (req, res) => {
 app.get('/urls/:id', (req, res) => {
   const templateVars = {
     id: req.params.id, longURL: urlDatabase[req.params.id],
-    username: req.cookies['username'],
+    user: users[req.cookies['user.id']],
   }
   res.render('urls_show.ejs', templateVars)
 });
 
 // GET /urls/:id
 app.get('/urls/:id', (req, res) => {
-  const templateVars = {id: req.params.id, longURL: urlDatabase[req.params.id]}
+   const templateVars = {
+    id: req.params.id, longURL: urlDatabase[req.params.id],
+    user: users[req.cookies['user.id']],
+  }
   res.render('urls_show.ejs', templateVars)
 });
 
