@@ -101,6 +101,12 @@ app.get('/urls/new', (req, res) => {
   res.render("urls_new.ejs", templateVars)
 });
 
+// redirect any request to ("u/:id") to its longURL
+app.get("/u/:id", (req, res) => {
+  const longURL = urlDatabase[req.params.id];
+  res.redirect(longURL);
+});
+
 // logs the POST request body to the console and responds 
 app.get('/urls/:id', (req, res) => {
   const templateVars = {
