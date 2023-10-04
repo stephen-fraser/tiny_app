@@ -74,10 +74,37 @@ app.post('/registration',(req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
+  // did they NOT submit an email and password?
   if (!email || !password) {
     return res.status(400).send("Please provide an email and password to register.")
   }
 
+  // look for a user based on the email provided in the users object
+  let foundUser = null;
+
+  for (const userId in users) {
+    const user = users[userId];
+    if (user.email === email) {
+      foundUser = user;
+    }
+  }
+
+  if (foundUser) {
+    return res.status(400).send('A user with that email is already registered.');
+  }
+
+  let id = generateRandomString(4) // use random string generatoed to create a unique ID
+
+  const user = {
+    id: id,
+    email: email,
+    password: password
+  }
+
+  users[id] = user; //assigning the new user objects name as it's unique 4 character ID
+  console.log(users)
+
+  res.redirect('/urls')
 });
 
 // GET /register
