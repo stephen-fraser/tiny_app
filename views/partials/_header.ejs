@@ -18,7 +18,7 @@
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
         <a class="nav-item nav-link" href="/registration">New User Registration</a>
       </div>
-      <% if(user.email) { %>
+      <% if(user) { %>
         <div>
           Logged in as: <%= user.email %>
         </div>

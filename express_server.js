@@ -112,7 +112,7 @@ app.post('/registration',(req, res) => {
 // GET /register
 app.get('/registration',(req, res) => {
   const templateVars = {
-    username: null
+    user: users[req.cookies['user.id']]
   };
   res.render('registration', templateVars);
 });
