@@ -66,10 +66,13 @@ app.post('/urls', (req, res) => {
 
   let uniqueURL = generateRandomString(6); // call generate random string for unique url
   const longURL = req.body.longURL
+
   urlDatabase[uniqueURL] = {
     longURL: longURL,
     userID: req.session.userID
-  }; // update urlDatabase with new unique url and long url 
+  }; 
+  console.log("urlDatabase:", urlDatabase);
+
   res.redirect(`/urls/${uniqueURL}`); // redirect after submittal to uniqueURL
 });
 
@@ -95,14 +98,12 @@ app.post('/urls/:id', (req, res) => {
     return res.status(401).send('Access denied: this URL belongs to another user!'); 
   }
 
-  urlDatabase[id] = updatedLongURL;
+  urlDatabase[id].longURL = updatedLongURL;
   res.redirect('/urls');
 })
 
 // POST /urls/:id/delete
 app.post('/urls/:id/delete', (req, res) => {
-
-
 
   const user = users[req.session.userID]
   const id = req.params.id;
@@ -235,7 +236,7 @@ app.get('/urls/new', (req, res) => {
   }
 
   if (!users[req.session.userID]) {
-    res.redirect('/login') 
+    return res.redirect('/login') 
   }
 
   res.render("urls_new.ejs", templateVars)
@@ -262,9 +263,8 @@ app.get('/urls/:id', (req, res) => {
   if (!user) {
     return res.status(400).send('Please login to access this content.');
   }
-  console.log('--------')
-  console.log(userID, urlDatabase[req.params.id].userID)
-  console.log('--------')
+  
+  
   if (userID !== urlDatabase[req.params.id].userID) {
     return res.status(401).send('Access denied: this URL belongs to another user!'); 
   }
@@ -291,7 +291,7 @@ app.get('/urls/:id', (req, res) => {
 app.get('/', (req, res) => {
 
   if (!users[req.session.userID]) {
-    res.redirect('/login');
+    return res.redirect('/login');
   }
 
   res.redirect('/urls')
