@@ -5,15 +5,13 @@ const generateRandomString = (length) => Math.random().toString(36).substring(2,
 // function for getting user by email
 const getUserByEmail = (users, email) => {
 
-  let foundUser = null;
-
-  for (const userId in users) {
-    const user = users[userId];
+  for (const userID in users) {
+    const user = users[userID];
     if (user.email === email) {
-      foundUser = user;
+      return user.id;
     }
   }
-  return foundUser;
+  return null;
 };
 
 
