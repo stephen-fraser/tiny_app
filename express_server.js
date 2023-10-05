@@ -120,10 +120,16 @@ app.post('/registration',(req, res) => {
   res.redirect('/urls')
 });
 
+// GET /login
 app.get('/login' ,(req, res) => {
   const templateVars = {
     user: users[req.cookies['user.id']]
   };
+
+  if (users[req.cookies['user.id']]) {
+    res.redirect('/urls');
+  };
+
   res.render('login', templateVars);
 });
 
@@ -133,7 +139,9 @@ app.get('/registration',(req, res) => {
     user: users[req.cookies['user.id']]
   };
 
-  
+  if (users[req.cookies['user.id']]) {
+    res.redirect('/urls')
+  }
 
   res.render('registration', templateVars);
 });
@@ -161,7 +169,7 @@ app.get('/urls/new', (req, res) => {
   }
 
   if (!users[req.cookies['user.id']]) {
-    res.redirect('/login')
+    res.redirect('/login') 
   }
 
   res.render("urls_new.ejs", templateVars)
@@ -170,6 +178,11 @@ app.get('/urls/new', (req, res) => {
 // GET /u/:id
 app.get("/u/:id", (req, res) => {
   const longURL = urlDatabase[req.params.id];
+
+    if (!longURL) {
+      return res.status(400).send("This short URL does not exist");
+    }
+
   res.redirect(longURL);
 });
 
