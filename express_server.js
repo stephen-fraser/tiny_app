@@ -162,7 +162,7 @@ app.post('/login', (req, res) => {
 app.post('/registration',(req, res) => {
 
   const email = req.body.email;
-  const password = req.body.password;
+  const password = bcrypt.hashSync(req.body.password, 10);
 
   // did they NOT submit an email and password?
   if (!email || !password) {
