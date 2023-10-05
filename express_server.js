@@ -211,7 +211,12 @@ app.get('/urls/:id', (req, res) => {
 
 // GET /
 app.get('/', (req, res) => {
-  res.send('Hello!');
+  
+  if (!users[req.cookies['user.id']]) {
+    res.redirect('/login');
+  }
+
+  res.redirect('/urls')
 });
 
 // GET /urls.json
