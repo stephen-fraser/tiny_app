@@ -211,7 +211,7 @@ app.get('/urls/:id', (req, res) => {
 
 // GET /
 app.get('/', (req, res) => {
-  
+
   if (!users[req.cookies['user.id']]) {
     res.redirect('/login');
   }
@@ -219,10 +219,6 @@ app.get('/', (req, res) => {
   res.redirect('/urls')
 });
 
-// GET /urls.json
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase); //adds JSON string that reprents the entire urlDatabase objects at time of request
-});
 
  // Listen
 app.listen(PORT, () => {
