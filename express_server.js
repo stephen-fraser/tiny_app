@@ -85,15 +85,51 @@ app.post('/urls', (req, res) => {
 
 // POST //urls/:id
 app.post('/urls/:id', (req, res) => {
+
+  const userID = req.cookies['user.userID']
+  const user = users[userID]
+
   const id = req.params.id;
-  const updatedLongURL = req.body.updatedLongURL; // Edit longURL
+  const updatedLongURL = req.body.updatedLongURL;
+  const destinationURL = urlDatabase[id]
+
+  if (!destinationURL) {
+    return res.status(400).send("This short URL does not exist");
+  }
+
+  if (!user) {
+    return res.status(400).send('Please login to access this content.');
+  }
+
+  if (user.userID !== urlDatabase[req.params.id].userID) {
+    return res.status(401).send('Access denied: this URL belongs to another user!'); 
+  }
+
   urlDatabase[id] = updatedLongURL;
   res.redirect('/urls');
 })
 
 // POST /urls/:id/delete
 app.post('/urls/:id/delete', (req, res) => {
-  const idToDelete = req.params.id;
+
+  const user = users[req.cookies['user.userID']]
+  const id = req.params.id;
+  const destinationURL = urlDatabase[id]
+
+  if (!destinationURL) {
+    return res.status(404).send("This short URL does not exist");
+  }
+
+  if (!user) {
+    return res.status(400).send('Please login to access this content.');
+  }
+
+  if (user.userID !== urlDatabase[id].userID) {
+    return res.status(401).send('Access denied: this URL belongs to another user!'); 
+  }
+
+  const idToDelete = id;
+
   delete urlDatabase[idToDelete]; // Delete url entries from the database
   res.redirect('/urls');
 });
@@ -217,12 +253,6 @@ app.get("/u/:id", (req, res) => {
 // GET /urls/:id
 app.get('/urls/:id', (req, res) => {
 
-  // const userID = req.cookies['user.userID']
-
-  // const templateVars = {
-  //   user: users[userID],
-  //   urls: getUrlsForUser(urlDatabase, userID)
-  // }
   const userID = req.cookies['user.userID']
   const user = users[userID]
 
