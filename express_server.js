@@ -28,18 +28,30 @@ const urlDatabase = {
 };
 
 const users = {
-  1234: {
-    id: "1234",
+  cba321: {
+    userID: "cba321",
     email: "a@a.com",
     password: "1234"
   },
-  5678: {
-    id: "5678",
+  fed543: {
+    userID: "fed543",
     email: "b@b.com",
     password: "5678"
   },
 };
 
+// function to filter urls based on userID
+const getUrlsForUser = (urlDatabase, userID) => {
+
+  let newDatabase = {}
+
+    for (let URL in urlDatabase) {
+      if (urlDatabase[URL].userID === userID) {
+        newDatabase[URL] = urlDatabase[URL]
+      }
+   } 
+   return newDatabase;
+}
 
 // Randon string generator to simulate tinyUrl
 const generateRandomString = (length) => Math.random().toString(36).substring(2, (length + 2))
@@ -61,7 +73,7 @@ const getUserByEmail = (users, email) => {
 // POST /urls
 app.post('/urls', (req, res) => {
 
-  if (!users[req.cookies['user.id']]) {
+  if (!users[req.cookies['user.userID']]) {
     return res.status(401).send('Please login to make changes to the shortURL database.') 
   }
 
@@ -95,7 +107,7 @@ app.post('/login', (req, res) => {
     return res.status(403).send('That email or password do not match our records.')
   }
 
-  res.cookie('user.id', user.id) //Save Cookies
+  res.cookie('user.userID', user.userID) //Save Cookies
   res.redirect('/urls')
 })
 
@@ -115,29 +127,29 @@ app.post('/registration',(req, res) => {
     return res.status(400).send('A user with that email is already in our database.');
   }
 
-  let id = generateRandomString(4) // use random string generatoed to create a unique ID
+  let userID = generateRandomString(6) // use random string generatoed to create a unique ID
 
   const user = {
-    id: id,
+    userID: userID,
     email: email,
     password: password
   }
 
-  users[id] = user; //assigning the new user objects name as it's unique 4 character ID
+  users[userID] = user; //assigning the new user objects name as it's unique 4 character ID
   console.log(users)
 
 
-  res.cookie('user.id', user.id) //
+  res.cookie('user.userID', user.userID) //
   res.redirect('/urls')
 });
 
 // GET /login
 app.get('/login' ,(req, res) => {
   const templateVars = {
-    user: users[req.cookies['user.id']]
+    user: users[req.cookies['user.userID']]
   };
 
-  if (users[req.cookies['user.id']]) {
+  if (users[req.cookies['user.userID']]) {
     res.redirect('/urls');
   };
 
@@ -147,10 +159,10 @@ app.get('/login' ,(req, res) => {
 // GET /register
 app.get('/registration',(req, res) => {
   const templateVars = {
-    user: users[req.cookies['user.id']]
+    user: users[req.cookies['user.userID']]
   };
 
-  if (users[req.cookies['user.id']]) {
+  if (users[req.cookies['user.userID']]) {
     res.redirect('/urls')
   }
 
@@ -159,16 +171,20 @@ app.get('/registration',(req, res) => {
 
 // POST /logout
 app.post('/logout', (req, res) => {
-  res.clearCookie('user.id')
+  res.clearCookie('user.userID')
   res.redirect('/login')
 });
 
 // GET /urls
 app.get('/urls', (req, res) => {
+
+  const userID = req.cookies['user.userID']
+
   const templateVars = {
-    user: users[req.cookies['user.id']],
-    urls: urlDatabase
-  };
+    user: users[userID],
+    urls: getUrlsForUser(urlDatabase, userID)
+  }
+
   //passes the URL data to our template
   res.render("urls_index", templateVars);
 });
@@ -176,10 +192,10 @@ app.get('/urls', (req, res) => {
 // GET /urls/new
 app.get('/urls/new', (req, res) => {
   templateVars = { 
-    user: users[req.cookies['user.id']],
+    user: users[req.cookies['user.userID']],
   }
 
-  if (!users[req.cookies['user.id']]) {
+  if (!users[req.cookies['user.userID']]) {
     res.redirect('/login') 
   }
 
@@ -203,7 +219,7 @@ app.get('/urls/:id', (req, res) => {
   const templateVars = {
     id: req.params.id, 
     longURL: urlDatabase[req.params.id].longURL,
-    user: users[req.cookies['user.id']],
+    user: users[req.cookies['user.userID']],
   }
   res.render('urls_show.ejs', templateVars)
 });
@@ -213,7 +229,7 @@ app.get('/urls/:id', (req, res) => {
    const templateVars = {
     id: req.params.id, 
     longURL: urlDatabase[req.params.id].longURL,
-    user: users[req.cookies['user.id']],
+    user: users[req.cookies['user.userID']],
   }
   res.render('urls_show.ejs', templateVars)
 });
@@ -221,7 +237,7 @@ app.get('/urls/:id', (req, res) => {
 // GET /
 app.get('/', (req, res) => {
 
-  if (!users[req.cookies['user.id']]) {
+  if (!users[req.cookies['user.userID']]) {
     res.redirect('/login');
   }
 
