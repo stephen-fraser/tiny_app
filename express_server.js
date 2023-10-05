@@ -4,7 +4,8 @@
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
-const cookieParser = require('cookie-parser'); // configuration of cookie-parser middleware
+// const cookieParser = require('cookie-parser'); // replace by cookie-session
+const cookieSession = require('cookie-session')
 const morgan = require('morgan') // configure morgan
 const bcrypt = require("bcryptjs"); // configure bcrypt
 
@@ -13,8 +14,9 @@ app.set('view engine', 'ejs');
 
 // middleware
 app.use(express.urlencoded({ extended: true })); //creates req.body // POST requests are sent as a Buffer (great for transmitting data but is not readable without this - this is middleware)
-app.use(cookieParser()); //start up cookieParser
+// app.use(cookieParser()); //start up cookieParser // replace by cookie-session
 app.use(morgan('dev')); // start up morgan
+app.use(cookieSession());
 
 // URL Database
 const urlDatabase = {
@@ -28,7 +30,6 @@ const urlDatabase = {
   }
 };
 
-
 // set hashed passwords for testing
 let password1 = '1234'
 const hash1 = bcrypt.hashSync(password1, 10);
@@ -36,7 +37,7 @@ const hash1 = bcrypt.hashSync(password1, 10);
 let password2 = '5678'
 const hash2 = bcrypt.hashSync(password2, 10);
 
-
+// User database
 const users = {
   cba321: {
     userID: "cba321",
