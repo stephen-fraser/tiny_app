@@ -216,12 +216,30 @@ app.get("/u/:id", (req, res) => {
 
 // GET /urls/:id
 app.get('/urls/:id', (req, res) => {
-  const templateVars = {
-    id: req.params.id, 
-    longURL: urlDatabase[req.params.id].longURL,
-    user: users[req.cookies['user.userID']],
+
+  // const userID = req.cookies['user.userID']
+
+  // const templateVars = {
+  //   user: users[userID],
+  //   urls: getUrlsForUser(urlDatabase, userID)
+  // }
+  const userID = req.cookies['user.userID']
+  const user = users[userID]
+
+  if (!user) {
+    return res.status(400).send('Please login to access this content.');
   }
-  res.render('urls_show.ejs', templateVars)
+
+  if (user.userID !== urlDatabase[req.params.id].userID) {
+    return res.status(401).send('Access denied: this URL belongs to another user!'); 
+  }
+
+    const templateVars = {
+      id: req.params.id, 
+      longURL: urlDatabase[req.params.id].longURL,
+      user: users[req.cookies['user.userID']],
+    }
+    res.render('urls_show.ejs', templateVars)
 });
 
 // GET /urls/:id
