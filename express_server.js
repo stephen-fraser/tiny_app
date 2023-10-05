@@ -132,6 +132,9 @@ app.get('/registration',(req, res) => {
   const templateVars = {
     user: users[req.cookies['user.id']]
   };
+
+  
+
   res.render('registration', templateVars);
 });
 
@@ -156,6 +159,11 @@ app.get('/urls/new', (req, res) => {
   templateVars = { 
     user: users[req.cookies['user.id']],
   }
+
+  if (!users[req.cookies['user.id']]) {
+    res.redirect('/login')
+  }
+
   res.render("urls_new.ejs", templateVars)
 });
 
