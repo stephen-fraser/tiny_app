@@ -6,6 +6,7 @@ const app = express();
 const PORT = 8080; // default port 8080
 const cookieParser = require('cookie-parser'); // configuration of cookie-parser middleware
 const morgan = require('morgan') // configure morgan
+const bcrypt = require("bcryptjs"); // configure bcrypt
 
 // configuration of express app - middleware
 app.set('view engine', 'ejs');
@@ -27,16 +28,25 @@ const urlDatabase = {
   }
 };
 
+
+// set hashed passwords for testing
+let password1 = '1234'
+const hash1 = bcrypt.hashSync(password1, 10);
+
+let password2 = '1234'
+const hash2 = bcrypt.hashSync(password2, 10);
+
+
 const users = {
   cba321: {
     userID: "cba321",
     email: "a@a.com",
-    password: "1234"
+    password: hash1
   },
   fed543: {
     userID: "fed543",
     email: "b@b.com",
-    password: "5678"
+    password: hash2
   },
 };
 
@@ -138,10 +148,11 @@ app.post('/urls/:id/delete', (req, res) => {
 app.post('/login', (req, res) => {
 
   const user = getUserByEmail(users, req.body.email)
+  const result = bcrypt.compareSync(req.body.password, user.password)
 
-  if (!user || user.password !== req.body.password) {
-    return res.status(403).send('That email or password do not match our records.')
-  }
+    if (!user || !result) {
+      return res.status(403).send("That email or password do not match our records.");
+    }
 
   res.cookie('user.userID', user.userID) //Save Cookies
   res.redirect('/urls')
