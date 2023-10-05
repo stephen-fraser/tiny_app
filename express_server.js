@@ -19,11 +19,11 @@ app.use(morgan('dev')); // start up morgan
 const urlDatabase = {
   abc123: {
     longURL: "http://www.lighthouselabs.ca",
-    userID: cba321
+    userID: 'cba321'
   },
   def456: {
     longURL: "http://www.google.com",
-    userID: fed654
+    userID: 'fed654'
   }
 };
 
@@ -167,7 +167,7 @@ app.post('/logout', (req, res) => {
 app.get('/urls', (req, res) => {
   const templateVars = {
     user: users[req.cookies['user.id']],
-    urls: urlDatabase 
+    urls: urlDatabase
   };
   //passes the URL data to our template
   res.render("urls_index", templateVars);
@@ -188,7 +188,8 @@ app.get('/urls/new', (req, res) => {
 
 // GET /u/:id
 app.get("/u/:id", (req, res) => {
-  const longURL = urlDatabase[req.params.id];
+
+  const longURL = urlDatabase[req.params.id].longURL;
 
     if (!longURL) {
       return res.status(400).send("This short URL does not exist");
@@ -200,7 +201,8 @@ app.get("/u/:id", (req, res) => {
 // GET /urls/:id
 app.get('/urls/:id', (req, res) => {
   const templateVars = {
-    id: req.params.id, longURL: urlDatabase[req.params.id],
+    id: req.params.id, 
+    longURL: urlDatabase[req.params.id].longURL,
     user: users[req.cookies['user.id']],
   }
   res.render('urls_show.ejs', templateVars)
@@ -209,7 +211,8 @@ app.get('/urls/:id', (req, res) => {
 // GET /urls/:id
 app.get('/urls/:id', (req, res) => {
    const templateVars = {
-    id: req.params.id, longURL: urlDatabase[req.params.id],
+    id: req.params.id, 
+    longURL: urlDatabase[req.params.id].longURL,
     user: users[req.cookies['user.id']],
   }
   res.render('urls_show.ejs', templateVars)
