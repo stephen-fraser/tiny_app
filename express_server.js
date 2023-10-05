@@ -54,6 +54,11 @@ const getUserByEmail = (users, email) => {
 
 // POST /urls
 app.post('/urls', (req, res) => {
+
+  if (!users[req.cookies['user.id']]) {
+    return res.status(401).send('Please login to make changes to the shortURL database.') 
+  }
+
   let uniqueURL = generateRandomString(6); // call generate random string for unique url
   const longURL = req.body.longURL
   urlDatabase[uniqueURL] = longURL; // update urlDatabase with new unique url and long url 
