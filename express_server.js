@@ -17,8 +17,14 @@ app.use(morgan('dev')); // start up morgan
 
 // URL Database
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  abc123: {
+    longURL: "http://www.lighthouselabs.ca",
+    userID: cba321
+  },
+  def456: {
+    longURL: "http://www.google.com",
+    userID: fed654
+  }
 };
 
 const users = {
