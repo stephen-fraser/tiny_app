@@ -11,7 +11,7 @@ const getUserByEmail = (users, email) => {
       return user.id;
     }
   }
-  return null;
+  return undefined;
 };
 
 

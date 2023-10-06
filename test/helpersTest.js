@@ -28,19 +28,27 @@ const testUrlDatabse = {
 
 
 describe('#getUserByEmail', () => {
+  
   it('should return a user with valid email', () => {
     const user = getUserByEmail(testUsers, "user@example.com")
     const expectedUserID = "userRandomID";
     assert.strictEqual(user, expectedUserID )
   });
+
+  it('should return undefined for email that is not in database', () => {
+    const user = getUserByEmail(testUsers, "hello@example.com")
+    assert.strictEqual(user, undefined )
+  });
 });
 
 
 describe('#generateRandomString', () => {
+
   it('should generate a random string at a specified input length', () => {
     const sixCharacterString = generateRandomString(6);
     assert.strictEqual(sixCharacterString.length, 6 )
   });
+
   it('should generate random strings that do not match', () => {
     const string1 = generateRandomString(4);
     const string2 = generateRandomString(4);
@@ -50,6 +58,7 @@ describe('#generateRandomString', () => {
 
 
 describe('#getUrlsForUser', () => {
+
   it('should return all the url objects for a user', () => {
     const urls = getUrlsForUser(testUrlDatabse, "userRandomID")
     const expectedUrls = { 
@@ -58,5 +67,10 @@ describe('#getUrlsForUser', () => {
       userID: 'userRandomID'
     }}
     assert.deepEqual(urls, expectedUrls )
+  });
+
+  it('should return an empty obejct if the user has no urls to their name', () => {
+    const urls = getUrlsForUser(testUrlDatabse, "userGuyRandomID")
+    assert.deepEqual(urls, {})
   });
 });
