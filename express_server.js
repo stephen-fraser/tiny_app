@@ -243,11 +243,13 @@ app.get('/urls/new', (req, res) => {
 // GET /u/:id
 app.get("/u/:id", (req, res) => {
 
-  const longURL = urlDatabase[req.params.id].longURL;
+  
 
-  if (!longURL) {
+  if (!urlDatabase[req.params.id]) {
     return res.status(400).send("This short URL does not exist");
   }
+
+  const longURL = urlDatabase[req.params.id].longURL;
 
   res.redirect(longURL);
 });
