@@ -26,5 +26,5 @@ TinyApp is a full stack web application built with Node and Express that allows 
 - You should be directed to the login page where you can proceed to login or select register to register as a new user
 - From there you can create new tiny urls 
 - A user is in control of their tiny urls and are the only ones that can edit/delete them
-- Since tiny urls are meant for sharing, anyone can travel to through http://localhost:8080/u/${tinyURL} 
+- Since tiny urls are meant for to simulate sharing a of your shortened urls to others, anyone can travel to them through http://localhost:8080/u/:id
 
