@@ -28,3 +28,6 @@ TinyApp is a full stack web application built with Node and Express that allows 
 - A user is in control of their tiny urls and are the only ones that can edit/delete them
 - Since tiny urls are meant for to simulate sharing a of your shortened urls to others, anyone can travel to them through http://localhost:8080/u/:id
 
+I hope you enjoy my very first project.
+
+Steve
