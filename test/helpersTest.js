@@ -32,7 +32,7 @@ describe('#getUserByEmail', () => {
   it('should return a user with valid email', () => {
     const user = getUserByEmail(testUsers, "user@example.com");
     const expectedUserID = "userRandomID";
-    assert.strictEqual(user, expectedUserID);
+    assert.strictEqual(user.id, expectedUserID);
   });
 
   it('should return undefined for email that is not in database', () => {
