@@ -69,9 +69,8 @@ app.post('/urls', (req, res) => {
     longURL: longURL,
     userID: req.session.userID
   };
-  console.log("urlDatabase:", urlDatabase);
 
-  res.redirect(`/urls/${uniqueURL}`); // redirect after submittal to uniqueURL
+  res.redirect(`/urls/${uniqueURL}`);
 });
 
 // POST //urls/:id
@@ -136,10 +135,15 @@ app.post('/login', (req, res) => {
   }
 
   const user = getUserByEmail(users, req.body.email);
+
+  if (!user) {
+    return res.status(403).send("That email or password does not match our records.");
+  }
+
   const result = bcrypt.compareSync(req.body.password, user.password);
 
-  if (!user || !result) {
-    return res.status(403).send("That email or password do not match our records.");
+  if (!result) {
+    return res.status(403).send("That email or password does not match our records.");
   }
 
   // res.cookie("userId", user.userID);
@@ -172,8 +176,6 @@ app.post('/registration',(req, res) => {
   };
 
   users[userID] = user; //assigning the new user objects name as it's unique 4 character ID
-  console.log(users);
-
 
   req.session.userID = userID; //
   res.redirect('/urls');
@@ -197,8 +199,6 @@ app.get('/registration',(req, res) => {
   const templateVars = {
     user: users[req.session.userID]
   };
-
-  console.log(templateVars);
 
   if (users[req.session.userID]) {
     return res.redirect('/urls');
@@ -261,8 +261,11 @@ app.get('/urls/:id', (req, res) => {
   if (!user) {
     return res.status(400).send('Please login to access this content.');
   }
-  
-  
+
+  if(!urlDatabase[req.params.id]) {
+    return res.status(404).send('Page not found.')
+  }
+
   if (userID !== urlDatabase[req.params.id].userID) {
     return res.status(401).send('Access denied: this URL belongs to another user!');
   }
