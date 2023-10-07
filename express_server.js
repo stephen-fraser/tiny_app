@@ -223,6 +223,10 @@ app.get('/urls', (req, res) => {
     urls: getUrlsForUser(urlDatabase, userID)
   };
 
+  if (!users[userID]) {
+    return res.status(401).send('Please login to view this content.');
+  }
+
   //passes the URL data to our template
   res.render("urls_index", templateVars);
 });
